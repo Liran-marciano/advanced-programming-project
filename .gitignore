@@ -1,0 +1,28 @@
+# Compiled output
+out/
+build/
+*.class
+
+# Submission staging
+submission_*/
+*.zip
+
+# JUnit / IDE artifacts
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Course-provided material (copyrighted by the course staff)
+presentations/
+project exercise/
+assignment*_zip/
+
+# Local-only files (not part of the deliverable)
+CLAUDE.md
