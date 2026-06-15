@@ -12,6 +12,9 @@ package project_biu.configs;
  */
 public class MathExampleConfig implements Config {
 
+    /** Constructs a new {@code MathExampleConfig}. */
+    public MathExampleConfig() { /* no setup needed */ }
+
     @Override
     public void create() {
         new BinOpAgent("plus",  "A", "B", "R1", (x, y) -> x + y);

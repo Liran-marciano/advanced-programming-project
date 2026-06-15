@@ -23,36 +23,69 @@ public class Node {
     private List<Node> edges;
     private Message msg;
 
+    /**
+     * Constructs a node with the given name and no outgoing edges.
+     *
+     * @param name display name of the node
+     */
     public Node(String name) {
         this.name = name;
         this.edges = new ArrayList<>();
     }
 
+    /**
+     * Returns this node's name.
+     * @return this node's name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Updates this node's name.
+     * @param name new display name for this node
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Returns the outgoing edges.
+     * @return the list of outgoing edges
+     */
     public List<Node> getEdges() {
         return edges;
     }
 
+    /**
+     * Replaces the outgoing edges list.
+     * @param edges replacement list of outgoing edges
+     */
     public void setEdges(List<Node> edges) {
         this.edges = edges;
     }
 
+    /**
+     * Returns the message attached to this node.
+     * @return the message currently attached to this node, or {@code null}
+     */
     public Message getMsg() {
         return msg;
     }
 
+    /**
+     * Attaches a message to this node.
+     * @param msg message to attach to this node
+     */
     public void setMsg(Message msg) {
         this.msg = msg;
     }
 
-    /** Appends {@code n} to the list of outgoing edges. */
+    /**
+     * Appends {@code n} to the list of outgoing edges.
+     *
+     * @param n the target node of the new edge
+     */
     public void addEdge(Node n) {
         edges.add(n);
     }
@@ -65,6 +98,8 @@ public class Node {
      * fully explored, and {@code stack} for nodes currently on the recursion
      * path. Hitting a node already on the stack proves a back edge — i.e. a
      * cycle.
+     *
+     * @return {@code true} if a cycle is reachable from this node
      */
     public boolean hasCycles() {
         return hasCyclesFrom(new HashSet<>(), new HashSet<>());

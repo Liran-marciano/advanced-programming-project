@@ -13,10 +13,26 @@ import project_biu.servlets.Servlet;
  */
 public interface HTTPServer extends Runnable {
 
-    /** Register {@code s} to handle requests with this verb and URI prefix. */
+    /**
+     * Register {@code s} to handle requests whose verb is {@code httpCommanmd}
+     * and whose URI starts with {@code uri}. Subsequent calls with the same
+     * (verb, URI) pair replace the previous mapping.
+     *
+     * @param httpCommanmd HTTP verb to match (e.g. {@code "GET"}, {@code "POST"});
+     *                     misspelling preserved to match the course skeleton
+     * @param uri          URI prefix this servlet should handle (longest-prefix
+     *                     match wins at dispatch time)
+     * @param s            the servlet that will receive matching requests
+     */
     void addServlet(String httpCommanmd, String uri, Servlet s);
 
-    /** Unregister whatever servlet is currently mapped at this (verb, URI). */
+    /**
+     * Unregister whatever servlet is currently mapped at this (verb, URI).
+     * A no-op if no such mapping exists.
+     *
+     * @param httpCommanmd HTTP verb of the registration to remove
+     * @param uri          URI prefix of the registration to remove
+     */
     void removeServlet(String httpCommanmd, String uri);
 
     /** Start the accept loop in the background. */

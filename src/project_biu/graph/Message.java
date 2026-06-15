@@ -34,6 +34,10 @@ public class Message {
      * Canonical constructor. The {@code asText} value drives the other
      * conversions, so that every {@code Message} ends up with all three
      * representations consistent.
+     *
+     * @param text the textual payload; if it parses as a {@code double} that
+     *             value is also exposed via {@link #asDouble}, otherwise
+     *             {@code asDouble} is {@link Double#NaN}
      */
     public Message(String text) {
         this.asText = text;
@@ -48,12 +52,21 @@ public class Message {
         this.date = new Date();
     }
 
-    /** Convenience constructor that decodes the bytes using the JVM default charset. */
+    /**
+     * Convenience constructor that decodes the bytes using the JVM default
+     * charset.
+     *
+     * @param data raw bytes to decode
+     */
     public Message(byte[] data) {
         this(new String(data));
     }
 
-    /** Convenience constructor that stores a number as its textual form. */
+    /**
+     * Convenience constructor that stores a number as its textual form.
+     *
+     * @param value the numeric payload
+     */
     public Message(double value) {
         this(Double.toString(value));
     }

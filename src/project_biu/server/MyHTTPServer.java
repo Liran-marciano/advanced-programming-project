@@ -43,6 +43,12 @@ public class MyHTTPServer extends Thread implements HTTPServer {
     private volatile ServerSocket serverSocket;
     private ExecutorService executor;
 
+    /**
+     * Constructs the server; call {@link #start()} to begin accepting connections.
+     *
+     * @param port     TCP port to listen on
+     * @param nThreads worker pool size for handling concurrent requests
+     */
     public MyHTTPServer(int port, int nThreads) {
         this.port = port;
         this.nThreads = nThreads;

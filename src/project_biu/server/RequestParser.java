@@ -26,6 +26,16 @@ import java.util.Map;
  */
 public class RequestParser {
 
+    /** Utility class; not meant to be instantiated. */
+    public RequestParser() { /* no setup needed */ }
+
+    /**
+     * Parses a single HTTP request off the given reader.
+     *
+     * @param reader buffered reader positioned at the start of a request
+     * @return a populated {@link RequestInfo} (never {@code null})
+     * @throws IOException if reading from the underlying stream fails
+     */
     public static RequestInfo parseRequest(BufferedReader reader) throws IOException {
         // ---- 1. Request line ----
         String requestLine = reader.readLine();
@@ -104,6 +114,15 @@ public class RequestParser {
         private final Map<String, String> parameters;
         private final byte[] content;
 
+        /**
+         * Constructs a {@code RequestInfo} from already-parsed pieces.
+         *
+         * @param httpCommand HTTP verb (e.g. {@code GET})
+         * @param uri         full request URI including any query string
+         * @param uriSegments path segments split on {@code '/'} with empties removed
+         * @param parameters  combined map of query-string and form parameters
+         * @param content     raw request body bytes
+         */
         public RequestInfo(String httpCommand,
                            String uri,
                            String[] uriSegments,
@@ -116,10 +135,30 @@ public class RequestParser {
             this.content = content;
         }
 
+        /**
+         * Returns the HTTP verb.
+         * @return the HTTP verb
+         */
         public String getHttpCommand() { return httpCommand; }
+        /**
+         * Returns the full request URI.
+         * @return the full request URI
+         */
         public String getUri() { return uri; }
+        /**
+         * Returns the URI path segments.
+         * @return URI path segments, empties removed
+         */
         public String[] getUriSegments() { return uriSegments; }
+        /**
+         * Returns the merged parameter map.
+         * @return the merged parameter map
+         */
         public Map<String, String> getParameters() { return parameters; }
+        /**
+         * Returns the raw request body bytes.
+         * @return the raw request body bytes
+         */
         public byte[] getContent() { return content; }
     }
 }

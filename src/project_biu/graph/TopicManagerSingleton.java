@@ -17,7 +17,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TopicManagerSingleton {
 
-    /** Entry point for clients. Returns the one and only {@link TopicManager}. */
+    /** Utility holder class; not meant to be instantiated. */
+    public TopicManagerSingleton() { /* no setup needed */ }
+
+    /**
+     * Entry point for clients. Returns the one and only {@link TopicManager}.
+     *
+     * @return the singleton {@link TopicManager} instance
+     */
     public static TopicManager get() {
         return TopicManager.instance;
     }
@@ -40,12 +47,19 @@ public class TopicManagerSingleton {
          * Returns the topic with the given name, creating it on first lookup.
          * Atomic with respect to concurrent callers thanks to
          * {@link ConcurrentHashMap#computeIfAbsent}.
+         *
+         * @param name the topic's identifier
+         * @return the existing or freshly created {@link Topic}
          */
         public Topic getTopic(String name) {
             return topics.computeIfAbsent(name, Topic::new);
         }
 
-        /** Read-only view of every topic currently registered. */
+        /**
+         * Read-only view of every topic currently registered.
+         *
+         * @return a live collection of all known topics
+         */
         public Collection<Topic> getTopics() {
             return topics.values();
         }

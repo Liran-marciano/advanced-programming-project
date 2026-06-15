@@ -33,6 +33,15 @@ public class BinOpAgent implements Agent {
     private boolean hasX = false;
     private boolean hasY = false;
 
+    /**
+     * Wires the agent into its two input topics and one output topic.
+     *
+     * @param name     this agent's display name
+     * @param sub1Name name of the first input topic
+     * @param sub2Name name of the second input topic
+     * @param pubName  name of the output topic
+     * @param op       binary operation applied to the two latest numeric inputs
+     */
     public BinOpAgent(String name,
                       String sub1Name,
                       String sub2Name,

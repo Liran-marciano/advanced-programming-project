@@ -26,3 +26,4 @@ assignment*_zip/
 
 # Local-only files (not part of the deliverable)
 CLAUDE.md
+.claude/

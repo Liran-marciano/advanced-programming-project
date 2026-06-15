@@ -45,6 +45,9 @@ public class ParallelAgent implements Agent {
     /**
      * Wraps {@code agent} behind a queue of at most {@code capacity} pending
      * callbacks. Starts the worker thread immediately.
+     *
+     * @param agent    the agent whose callbacks will run on the worker thread
+     * @param capacity maximum number of pending callbacks held in the queue
      */
     public ParallelAgent(Agent agent, int capacity) {
         this.agent = agent;

@@ -13,10 +13,18 @@ public interface Config {
     /** Build the agents and subscriptions that this config represents. */
     void create();
 
-    /** Human-readable name for the config. */
+    /**
+     * Human-readable name for the config.
+     *
+     * @return the config's display name
+     */
     String getName();
 
-    /** Version stamp (useful when a config evolves over time). */
+    /**
+     * Version stamp (useful when a config evolves over time).
+     *
+     * @return the config's version number
+     */
     int getVersion();
 
     /** Dispose of every agent created by {@link #create()}. */

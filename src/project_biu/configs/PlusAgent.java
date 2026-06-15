@@ -24,6 +24,12 @@ public class PlusAgent implements Agent {
     private double x = 0.0;
     private double y = 0.0;
 
+    /**
+     * Reflective constructor used by {@code GenericConfig}.
+     *
+     * @param subs input topics (uses {@code subs[0]} and {@code subs[1]})
+     * @param pubs output topics (uses {@code pubs[0]})
+     */
     public PlusAgent(String[] subs, String[] pubs) {
         this.subs = subs;
         this.pubs = pubs;
@@ -36,7 +42,11 @@ public class PlusAgent implements Agent {
 
     @Override
     public String getName() {
-        return "PlusAgent";
+        // Include the output topic so two PlusAgent instances in the same
+        // config (e.g. one publishing "Sum", another "Total") get distinct
+        // names. Without this, Graph.createFromTopics() would collapse them
+        // into one node because it dedupes by getName().
+        return (pubs != null && pubs.length > 0) ? "Plus[" + pubs[0] + "]" : "PlusAgent";
     }
 
     @Override

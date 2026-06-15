@@ -20,6 +20,12 @@ public class IncAgent implements Agent {
     private final String[] subs;
     private final String[] pubs;
 
+    /**
+     * Reflective constructor used by {@code GenericConfig}.
+     *
+     * @param subs input topics (only {@code subs[0]} is used)
+     * @param pubs output topics (only {@code pubs[0]} is used)
+     */
     public IncAgent(String[] subs, String[] pubs) {
         this.subs = subs;
         this.pubs = pubs;
@@ -31,7 +37,9 @@ public class IncAgent implements Agent {
 
     @Override
     public String getName() {
-        return "IncAgent";
+        // Include the output topic so two IncAgent instances in the same
+        // config get distinct names (see Graph.createFromTopics dedup).
+        return (pubs != null && pubs.length > 0) ? "Inc[" + pubs[0] + "]" : "IncAgent";
     }
 
     @Override

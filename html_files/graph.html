@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Computational Graph</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Static template -- HtmlGraphWriter loads this file and substitutes
+       node/edge SVG fragments and the canvas size. Keep all visual rules
+       here so the view can be re-skinned without touching Java. */
+
+    :root {
+      --bg-1: #0f172a;
+      --bg-2: #1e293b;
+      --bg-card: rgba(255,255,255,0.04);
+      --text-1: #f1f5f9;
+      --text-2: #94a3b8;
+      --accent: #38bdf8;
+      --accent-2: #a78bfa;
+      --topic-input: #22d3ee;
+      --topic-mid:   #60a5fa;
+      --topic-out:   #f472b6;
+      --agent:       #fbbf24;
+      --edge:        #475569;
+    }
+
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      background: radial-gradient(ellipse at top, var(--bg-2), var(--bg-1));
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-1);
+      overflow: hidden;
+    }
+    .canvas-wrap {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 16px; box-sizing: border-box;
+    }
+    svg {
+      max-width: 100%; height: auto;
+    }
+
+    /* === Edges === */
+    .edge {
+      stroke: #94a3b8;
+      stroke-width: 2.6;
+      fill: none;
+      stroke-linecap: round;
+      stroke-dasharray: 5 4;
+      animation: flow 1.4s linear infinite;
+      filter: drop-shadow(0 0 5px rgba(148, 163, 184, 0.4));
+    }
+    @keyframes flow {
+      from { stroke-dashoffset: 0;    }
+      to   { stroke-dashoffset: -18;  }
+    }
+
+    /* === Nodes === */
+    .topic-rect {
+      stroke-width: 2;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.35));
+      transition: transform 0.2s;
+    }
+    .topic-rect.input         { fill: url(#grad-input); stroke: var(--topic-input); }
+    .topic-rect.intermediate  { fill: url(#grad-mid);   stroke: var(--topic-mid); }
+    .topic-rect.output        { fill: url(#grad-out);   stroke: var(--topic-out); }
+
+    .agent-circ {
+      fill: url(#grad-agent);
+      stroke: var(--agent);
+      stroke-width: 2;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+    }
+
+    .node-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      text-anchor: middle;
+      dominant-baseline: central;
+      fill: var(--text-1);
+      pointer-events: none;
+    }
+    .agent-label {
+      font-size: 11px;
+      fill: #1e293b;
+      font-weight: 700;
+    }
+
+    /* === Value labels (pulse-in on every render) === */
+    .value-label {
+      font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+      font-size: 13px;
+      font-weight: 700;
+      text-anchor: middle;
+      fill: var(--accent);
+      pointer-events: none;
+      animation: pulse 0.6s ease-out;
+    }
+    .value-bg {
+      fill: rgba(56, 189, 248, 0.15);
+      stroke: rgba(56, 189, 248, 0.4);
+      stroke-width: 1;
+      filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.25));
+      animation: pulse 0.6s ease-out;
+    }
+    @keyframes pulse {
+      0%   { opacity: 0; transform: scale(0.85); }
+      60%  { opacity: 1; transform: scale(1.08); }
+      100% { opacity: 1; transform: scale(1.00); }
+    }
+
+    .legend {
+      position: fixed; bottom: 14px; left: 14px;
+      display: flex; gap: 14px; align-items: center;
+      font-size: 11px; color: var(--text-2);
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(8px);
+      padding: 8px 12px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .legend .sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; vertical-align: middle; margin-right: 5px; }
+    .legend .sw.input { background: var(--topic-input); }
+    .legend .sw.mid   { background: var(--topic-mid); }
+    .legend .sw.out   { background: var(--topic-out); }
+    .legend .sw.agent { background: var(--agent); border-radius: 50%; }
+
+    .empty-state {
+      position: absolute;
+      inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-2);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas-wrap">
+    <svg width="{{SVG_WIDTH}}" height="{{SVG_HEIGHT}}" viewBox="0 0 {{SVG_WIDTH}} {{SVG_HEIGHT}}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Gradients for the three "roles" of topic + agents -->
+        <linearGradient id="grad-input" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"  stop-color="#0891b2"/>
+          <stop offset="100%" stop-color="#0e7490"/>
+        </linearGradient>
+        <linearGradient id="grad-mid" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"  stop-color="#3b82f6"/>
+          <stop offset="100%" stop-color="#1e40af"/>
+        </linearGradient>
+        <linearGradient id="grad-out" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"  stop-color="#ec4899"/>
+          <stop offset="100%" stop-color="#9d174d"/>
+        </linearGradient>
+        <linearGradient id="grad-agent" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"  stop-color="#fde047"/>
+          <stop offset="100%" stop-color="#f59e0b"/>
+        </linearGradient>
+
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 L 2 5 z" fill="#cbd5e1"/>
+        </marker>
+      </defs>
+
+      <g id="edges">
+{{EDGES}}
+      </g>
+      <g id="nodes">
+{{NODES}}
+      </g>
+    </svg>
+  </div>
+
+  <div class="legend">
+    <span><span class="sw input"></span>Input topic</span>
+    <span><span class="sw mid"></span>Intermediate</span>
+    <span><span class="sw out"></span>Output</span>
+    <span><span class="sw agent"></span>Agent</span>
+  </div>
+</body>
+</html>

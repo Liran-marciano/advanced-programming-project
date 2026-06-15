@@ -34,6 +34,14 @@ public class GenericConfig implements Config {
     private String confFile;
     private final List<ParallelAgent> agents = new ArrayList<>();
 
+    /** Constructs an empty {@code GenericConfig}; call {@link #setConfFile(String)} before {@link #create()}. */
+    public GenericConfig() { /* no setup needed */ }
+
+    /**
+     * Sets the path of the configuration file to load.
+     *
+     * @param confFile path to the text config file
+     */
     public void setConfFile(String confFile) {
         this.confFile = confFile;
     }

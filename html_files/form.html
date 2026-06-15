@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Controls</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #0f172a;
+      --panel:  #1e293b;
+      --border: rgba(255,255,255,0.08);
+      --text-1: #f1f5f9;
+      --text-2: #94a3b8;
+      --accent: #38bdf8;
+      --accent-2: #a78bfa;
+      --danger: #f43f5e;
+      --ok:     #22c55e;
+    }
+    html, body {
+      margin: 0; padding: 16px;
+      background: var(--bg);
+      color: var(--text-1);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 13px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .panel h2 {
+      margin: 0 0 12px 0;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      color: var(--text-2);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .panel h2 .pill {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    label { display: block; margin-bottom: 10px; }
+    label > span {
+      display: block; margin-bottom: 4px;
+      font-size: 11px; color: var(--text-2);
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    input[type="text"], select {
+      width: 100%; box-sizing: border-box;
+      padding: 8px 10px;
+      background: var(--bg);
+      color: var(--text-1);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font: inherit; font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    input[type="text"]:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    }
+
+    /* Custom file picker -- the native one shows browser-locale text
+       (e.g. "בחירת קובץ" on Hebrew Windows). We hide the real input and
+       render our own button + filename label so the UI stays English. */
+    .file-picker {
+      display: flex; align-items: stretch; gap: 8px;
+      width: 100%; box-sizing: border-box;
+    }
+    .file-picker input[type="file"] {
+      position: absolute; left: -9999px;
+      width: 1px; height: 1px; opacity: 0; pointer-events: none;
+    }
+    .file-picker .file-btn {
+      flex-shrink: 0;
+      padding: 8px 12px;
+      background: var(--accent);
+      color: #0f172a;
+      border: none; border-radius: 6px;
+      font: inherit; font-weight: 600; font-size: 11px;
+      letter-spacing: 0.4px; text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .file-picker .file-btn:hover { background: #7dd3fc; }
+    .file-picker .file-name {
+      flex: 1; min-width: 0;
+      padding: 8px 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      color: var(--text-2);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .file-picker .file-name.has-file { color: var(--text-1); }
+
+    button.primary, button.secondary {
+      width: 100%; padding: 9px 12px;
+      border: none; border-radius: 6px;
+      font: inherit; font-weight: 600; font-size: 12px;
+      text-transform: uppercase; letter-spacing: 0.6px;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.15s, background 0.15s;
+    }
+    button.primary {
+      background: linear-gradient(135deg, #38bdf8, #a78bfa);
+      color: #0f172a;
+      box-shadow: 0 4px 12px rgba(56,189,248,0.3);
+    }
+    button.primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(56,189,248,0.45); }
+    button.secondary {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--text-1);
+      margin-top: 8px;
+    }
+    button.secondary:hover { background: rgba(255,255,255,0.05); }
+
+    .status {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-2);
+      min-height: 1em;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .status.error { color: var(--danger); }
+    .status.ok    { color: var(--ok); }
+
+    .examples {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .chip {
+      padding: 6px 8px;
+      background: rgba(56,189,248,0.08);
+      border: 1px solid rgba(56,189,248,0.18);
+      border-radius: 5px;
+      font-size: 11px;
+      color: var(--accent);
+      cursor: pointer; text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .chip:hover {
+      background: rgba(56,189,248,0.15);
+      border-color: rgba(56,189,248,0.4);
+    }
+
+    .topic-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .topic-grid label { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+
+  <div class="panel">
+    <h2><span class="pill"></span>Configuration</h2>
+    <form id="uploadForm">
+      <label>
+        <span>Config file (.conf)</span>
+        <div class="file-picker">
+          <input type="file" id="configFile" accept=".conf,.txt,text/plain">
+          <button type="button" class="file-btn" id="pickBtn">Browse&hellip;</button>
+          <div class="file-name" id="fileName">No file selected</div>
+        </div>
+      </label>
+      <button type="submit" class="primary">Deploy</button>
+      <div class="examples">
+        <div class="chip" data-example="simple">simple.conf</div>
+        <div class="chip" data-example="chain">chain.conf</div>
+      </div>
+      <div class="status" id="uploadStatus"></div>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h2><span class="pill"></span>Publish message</h2>
+    <form action="/publish" method="get" target="rightFrame">
+      <div class="topic-grid">
+        <label>
+          <span>Topic</span>
+          <input type="text" name="topic" placeholder="A" required>
+        </label>
+        <label>
+          <span>Value</span>
+          <input type="text" name="message" placeholder="42" required>
+        </label>
+      </div>
+      <button type="submit" class="primary" style="margin-top: 4px;">Send</button>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h2><span class="pill"></span>Quick actions</h2>
+    <button class="secondary" id="resetBtn">Reset values</button>
+  </div>
+
+  <script>
+    // ---- Custom file picker: forward the click to the hidden <input>,
+    //      and show the chosen filename in our own label. -----------------
+    const fileInput = document.getElementById("configFile");
+    const fileName  = document.getElementById("fileName");
+    document.getElementById("pickBtn").addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", () => {
+      if (fileInput.files.length) {
+        fileName.textContent = fileInput.files[0].name;
+        fileName.classList.add("has-file");
+      } else {
+        fileName.textContent = "No file selected";
+        fileName.classList.remove("has-file");
+      }
+    });
+
+    // ---- Upload form: read the file, POST it in our parser's shape. ----
+    document.getElementById("uploadForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const statusEl = document.getElementById("uploadStatus");
+      const file = fileInput.files[0];
+      if (!file) {
+        statusEl.textContent = "Pick a file first.";
+        statusEl.className = "status error";
+        return;
+      }
+      await deployContent(file.name, await file.text(), statusEl);
+    });
+
+    async function deployContent(name, content, statusEl) {
+      statusEl.textContent = "Deploying " + name + "...";
+      statusEl.className = "status";
+      try {
+        const body = 'filename="' + name + '"\n\n' + content + '\n';
+        const response = await fetch("/upload", { method: "POST", body: body });
+        const html = await response.text();
+        const center = parent.document.getElementsByName("centerFrame")[0];
+        if (center) center.srcdoc = html;
+        // Auto-populate the right iframe with the (empty) topic table so
+        // the user doesn't have to publish before seeing it.
+        const right = parent.document.getElementsByName("rightFrame")[0];
+        if (right) right.src = "/publish";
+        statusEl.textContent = "Deployed " + name;
+        statusEl.className = "status ok";
+      } catch (err) {
+        statusEl.textContent = "Failed: " + err.message;
+        statusEl.className = "status error";
+      }
+    }
+
+    // ---- Example chips: pre-baked configs the demo can load instantly. ----
+    const EXAMPLES = {
+      simple:
+        "project_biu.configs.PlusAgent\n" +
+        "A,B\n" +
+        "C\n" +
+        "project_biu.configs.IncAgent\n" +
+        "C\n" +
+        "D\n",
+      chain:
+        "project_biu.configs.PlusAgent\n" +
+        "A,B\n" +
+        "Sum\n" +
+        "project_biu.configs.PlusAgent\n" +
+        "Sum,C\n" +
+        "Total\n" +
+        "project_biu.configs.IncAgent\n" +
+        "Total\n" +
+        "Result\n"
+    };
+    document.querySelectorAll(".chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const key = chip.dataset.example;
+        const content = EXAMPLES[key];
+        if (!content) return;
+        deployContent(key + ".conf", content, document.getElementById("uploadStatus"));
+      });
+    });
+
+    // ---- Reset values: clear every topic's latest message but KEEP the
+    //      graph structure (no re-upload needed). Server endpoint defined
+    //      in TopicReset.java; routed at GET /reset by Main. -------------
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      const right = parent.document.getElementsByName("rightFrame")[0];
+      if (right) right.src = "/reset";
+    });
+  </script>
+</body>
+</html>

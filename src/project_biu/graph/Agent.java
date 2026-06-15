@@ -10,7 +10,13 @@ package project_biu.graph;
  */
 public interface Agent {
 
-    /** Returns the agent's name (useful for graph diagrams and debugging). */
+    /**
+     * Returns the agent's display name.
+     *
+     * @return the agent's display name. Should be <em>unique per instance</em>
+     *         within a single configuration so that {@code Graph.createFromTopics()}
+     *         does not collapse two distinct agents into one node.
+     */
     String getName();
 
     /** Resets the agent's internal state. */

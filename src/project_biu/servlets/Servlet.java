@@ -17,9 +17,24 @@ import project_biu.server.RequestParser.RequestInfo;
  */
 public interface Servlet {
 
-    /** Process a parsed request and write the response to {@code toClient}. */
+    /**
+     * Process a parsed request and write the full HTTP response (status
+     * line, headers, blank line, body) to {@code toClient}.
+     *
+     * @param ri        parsed request &mdash; URI, parameters, content bytes
+     * @param toClient  the socket's output stream; the implementation must
+     *                  write a syntactically valid HTTP response here
+     * @throws IOException if writing to the socket fails (network error,
+     *                     client closed prematurely, &hellip;)
+     */
     void handle(RequestInfo ri, OutputStream toClient) throws IOException;
 
-    /** Release any resources the servlet is holding (called by the server on shutdown). */
+    /**
+     * Release any resources the servlet is holding. Called by
+     * {@link project_biu.server.HTTPServer#close()} when the server is
+     * shutting down.
+     *
+     * @throws IOException if cleanup fails
+     */
     void close() throws IOException;
 }

@@ -18,9 +18,14 @@ import project_biu.graph.TopicManagerSingleton;
  */
 public class Graph extends ArrayList<Node> {
 
+    /** Constructs an empty {@code Graph}; populate it via {@link #createFromTopics()}. */
+    public Graph() { /* no setup needed */ }
+
     /**
      * Returns {@code true} if any node belongs to a strongly-connected
      * component that contains a cycle.
+     *
+     * @return {@code true} when at least one node sits on a directed cycle
      */
     public boolean hasCycles() {
         for (Node n : this) {
