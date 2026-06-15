@@ -137,7 +137,8 @@ the deck used for the demo video below, with speaker notes for every slide.
 
 ## 4. Demo video
 
-[Watch the 5-minute walk-through here.](https://youtu.be/REPLACE_ME)
+A 5-minute walk-through is included in the repo at [demo.mp4](demo.mp4)
+(download to play; GitHub doesn't auto-play MP4s inline).
 
 Sections of the recording:
 
