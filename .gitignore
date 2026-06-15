@@ -27,3 +27,6 @@ assignment*_zip/
 # Local-only files (not part of the deliverable)
 CLAUDE.md
 .claude/
+
+# Moodle submission file with personal ID -- never push
+link.txt

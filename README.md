@@ -130,8 +130,8 @@ The page is split into three columns:
    `PlusAgent`'s internal state resets, but the graph topology stays
    intact (no need to re-upload).
 
-A complete walkthrough is in [PRESENTATION.md](PRESENTATION.md) (the
-script for the demo video below).
+A complete walkthrough lives in [PRESENTATION.pptx](PRESENTATION.pptx) &mdash;
+the deck used for the demo video below, with speaker notes for every slide.
 
 ---
 
@@ -150,8 +150,8 @@ Sections of the recording:
 5. **Beyond the minimum** &mdash; pieces we added beyond the PDF spec
 6. **Lessons learned** &mdash; what the course taught us
 
-The same outline lives as a slide-by-slide script in
-[PRESENTATION.md](PRESENTATION.md).
+Full slide-by-slide content (with the speaker notes used to record the
+voice-over) lives in [PRESENTATION.pptx](PRESENTATION.pptx).
 
 ---
 
@@ -258,7 +258,7 @@ past it; the items we added:
 ├── tests/                    Reserved for JUnit tests
 ├── lib/                      JUnit jar (only build-time dependency)
 ├── docs/javadoc/             Generated API documentation
-├── PRESENTATION.md           Slide-by-slide script for the demo video
+├── PRESENTATION.pptx         Demo-video deck (with speaker notes)
 └── README.md                 (this file)
 ```
 
@@ -318,23 +318,3 @@ Submitted by **Liran Marciano** (`liranmar88@gmail.com`).
 Course: Advanced Programming, Bar-Ilan University &mdash;
 Dr. Eliahu Khalastchi (89-210 / 89-211), Spring 2026.
 
----
-
-## 9. Going further
-
-Ideas that build naturally on this foundation:
-
-- **More agent types.** Write one class with the `(String[], String[])`
-  constructor and reference it from a `.conf` &mdash; e.g.
-  `MulAgent`, `MaxAgent`, `LogAgent`, a `TextSentimentAgent` for
-  non-mathematical pipelines.
-- **WebSocket push.** Replace the per-publish `srcdoc` refresh with
-  a server-pushed update stream; the static template and renderer
-  would not need to change.
-- **Persisted topic history.** Track the last *N* values per topic
-  so the UI can show a sparkline rather than a single number.
-- **Force-directed layout.** The current topological layering is
-  easy to swap out for a JS physics simulation inside `graph.html`.
-- **Auth & multi-tenant.** Each browser session gets its own
-  `TopicManager` so multiple users can run independent graphs
-  concurrently.
